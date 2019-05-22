@@ -20,12 +20,42 @@ var Coiniser = function(formId, amountId, replyId) {
         if (!amount 
             || amount.match(/^£?[\d\.]+p?$/g) === null // basic currency structure            
             || (amount.match(/\./g) !== null && amount.match(/\./g).length > 1) // and not more than one decimal point
-            ) 
-            {
+        ) 
+        {
                 document.getElementById(replyId).innerHTML = "Sorry, invalid value";
                 return;
-            } 
-    }
+        }
+    }  
+    
+    /* Helper function to convert currency value to integer pennies value */
+    var parsePennies = function(currency) {
+        
+        // initialise variable to hold pennies value for return
+        let pennies = currency;
+        
+        // drop pound symbol for numeric computations
+        if (pennies.indexOf('£') > -1) { 
+            pennies = pennies.substr(1); 
+        }
+        
+        // convert to numeric now
+        pennies = parseFloat(pennies);
+                
+        // round up any decimals to two places
+        // uses multiply/divide approach as at https://javascript.info/number#rounding
+        if (currency.indexOf('.') > -1) {
+            pennies *= 100;
+            pennies = Math.ceil(pennies);
+            pennies /= 100;
+        }
+        
+        // if pounds indicated by £ symbol, or decimal point, multiply up to penny value
+        if (currency.indexOf('£') > -1 || currency.indexOf('.') > -1) {
+            pennies *= 100;
+        }            
+        
+        return pennies;
+    }    
     
     /* Basic test facility taking array of input and required output values */
     var test = function(
