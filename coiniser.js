@@ -15,7 +15,6 @@ var Coiniser = function(formId, amountId, replyId) {
     
     /* Controller function linked to form submission */
     var coinise = function() {
-        // ...
     }
     
     /* Basic test facility taking array of input and required output values */
@@ -23,8 +22,21 @@ var Coiniser = function(formId, amountId, replyId) {
         inputs = ['123p','£15.62'], 
         outputs = ['1 x £1, 1 x 20p, 1 x 2p, 1 x 1p','7 x £2, 1 x £1, 1 x 50p, 1 x 10p, 1 x 2p']
         ) {
-            // ...            
-        });
+            // set up timer-based testing to populate form, pseudo-submit and check result for each test item
+            for (let c = 0; c < inputs.length; c++) {            
+                window.setTimeout(function() {
+                    console.log("Testing " + inputs[c]);
+                    document.getElementById(amountId).setAttribute('value',inputs[c]);                    
+                    // from JS, need to call handler directly rather than submitting form
+                    coinise(); 
+                    // check results
+                    if (document.getElementById(replyId).getAttribute('value') === outputs[c]) {
+                        console.log("Pass");
+                    } else {
+                        console.log("Fail");
+                    }
+                }, 1000 + (c * 1000));
+            }            
     }
     
     /* export test function for availability */
