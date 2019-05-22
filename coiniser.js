@@ -25,7 +25,44 @@ var Coiniser = function(formId, amountId, replyId) {
                 document.getElementById(replyId).innerHTML = "Sorry, invalid value";
                 return;
         }
-    }  
+        // else
+        // compute coin mix
+        let coinages = coinage(amount);
+        // format and output
+        let reply = "";        
+        for (var [coin, count] of Object.entries(coinages)) {            
+            if (count > 0) {
+                reply += (count + " x " + coin + ", ");
+            }
+        }
+        reply = reply.substr(0, reply.length-2); // remove extra comma
+        document.getElementById(replyId).innerHTML = reply;
+    }
+    
+    /* Const array of Stirling coins */
+    var coins = ['£2', '£1', '50p', '20p', '10p', '5p', '2p', '1p' ];
+    
+    /* Core function to compute optimal coin mix for parameter currency amount */
+    /* Returns object array: { '£2' => n, '£1' = n, ... } */
+    var coinage = function(currency) {        
+        let coinage = {}; // for return
+        
+        // loop through coins, populating coinage for return and decreasing remaining total until zero
+        let total = parsePennies(currency);        
+        let denomination = 0;
+        while (total !== 0 && denomination < coins.length) {
+            let coin = coins[denomination];
+            let coinpennies = parsePennies(coin);
+            // integer dividend is number of denomination coins required  
+            coinage[coin] = parseInt(total / coinpennies);
+            // remainder is the remaining total
+            total = total % coinpennies;
+            denomination++;
+        }
+
+        return coinage;
+    }
+
     
     /* Helper function to convert currency value to integer pennies value */
     var parsePennies = function(currency) {
