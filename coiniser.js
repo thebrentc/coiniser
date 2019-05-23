@@ -75,6 +75,30 @@ var Coiniser = function(formId, amountId, replyId) {
         }
     }
     
+    /* Const array of Stirling coins */
+    var coins = ['£2', '£1', '50p', '20p', '10p', '5p', '2p', '1p' ];
+    
+    /* Core function to compute optimal coin mix for parameter currency amount */
+    /* Returns object array: { '£2' => n, '£1' = n, ... } */
+    var coinage = function(currency) {        
+        let coinage = {}; // for return
+        
+        // loop through coins, populating coinage for return and decreasing remaining total until zero
+        let total = parsePennies(currency);        
+        let denomination = 0;
+        while (total !== 0 && denomination < coins.length) {
+            let coin = coins[denomination];
+            let coinpennies = parsePennies(coin);
+            // integer dividend is number of denomination coins required  
+            coinage[coin] = parseInt(total / coinpennies);
+            // remainder is the remaining total
+            total = total % coinpennies;
+            denomination++;
+        }
+
+        return coinage;
+    }
+   
     /* Helper function to convert currency value to integer pennies value */
     var parsePennies = function(currency) {
         
@@ -144,8 +168,18 @@ var Coiniser = function(formId, amountId, replyId) {
 
 }
 
-/* invoke coiniser with page elements as parameters */
+/* invoke coiniser with essential html elements as parameters */
 var coiniser = new Coiniser('request','amount','reply');
 
+/* add page-specific interface handling - show output block on submission */
+document.getElementById('request').addEventListener("submit", function(event) {
+    document.getElementById('output').style.display = 'block';
+});
+
 /* optional, run tests */
-//coiniser.test();
+function test_coiniser() {
+    // display output section, and run Coiniser tests
+    document.getElementById('output').style.display = 'block'; 
+    coiniser.test();
+}
+//test_coiniser(); // uncomment to run tests

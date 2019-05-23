@@ -1,0 +1,8 @@
+/* CSS for index.html implementing Coiniser module */
+
+/* Basic styling */
+body * { font-family: Arial, Helvetica, sans-serif; }
+h2 { font-size: 110%; }
+
+/* start with output block hidden until submission */
+#output { display: none; }
