@@ -1,7 +1,14 @@
-/**  Coiniser module, taking HTML form, input and output elements as parameters **/
+/**
+ * Coiniser module
+ * Calculates the minimum number of Sterling coins needed to make required amount
+ * @author brent.c.cunningham@gmail.com
+ * @param formId  - the HTML form on calling page 
+ * @param amountId  - the HTML form element for user entered amount
+ * @param replyId  - the HTML form element for response output
+ */
 var Coiniser = function(formId, amountId, replyId) {
 
-    /* Initialise, adding handler to form */
+    /** Initialise, adding handler to form */
     var init = function() {
         document.getElementById(formId).addEventListener("submit", function(event) {
             // override default submit
@@ -13,7 +20,7 @@ var Coiniser = function(formId, amountId, replyId) {
     }
     init();
        
-    /* Controller function linked to form submission */
+    /** Controller function linked to form submission */
     var coinise = function() {
         let amount = document.getElementById(amountId).value;
         
@@ -37,10 +44,10 @@ var Coiniser = function(formId, amountId, replyId) {
         document.getElementById(replyId).innerHTML = reply;
     }
     
-    /* Const array of Stirling coins */
+    /** Const array of Stirling coins */
     var coins = ['£2', '£1', '50p', '20p', '10p', '5p', '2p', '1p' ];
     
-    /* Core function to compute optimal coin mix for parameter currency amount */
+    /** Core function to compute optimal coin mix for parameter currency amount */
     /* Returns object array: { '£2' => n, '£1' = n, ... } */
     var coinage = function(currency) {        
         let coinage = {}; // for return
@@ -62,7 +69,7 @@ var Coiniser = function(formId, amountId, replyId) {
         return coinage;
     }
 
-    /* Validates format as Stirling currency for currency parameter */
+    /** Validates format as Stirling currency for currency parameter */
     var validateCurrency = function(currency) {
         if (!currency 
             || currency.match(/^£?[\d\.]+p?$/g) === null // basic currency structure            
@@ -74,32 +81,8 @@ var Coiniser = function(formId, amountId, replyId) {
             return true;
         }
     }
-    
-    /* Const array of Stirling coins */
-    var coins = ['£2', '£1', '50p', '20p', '10p', '5p', '2p', '1p' ];
-    
-    /* Core function to compute optimal coin mix for parameter currency amount */
-    /* Returns object array: { '£2' => n, '£1' = n, ... } */
-    var coinage = function(currency) {        
-        let coinage = {}; // for return
-        
-        // loop through coins, populating coinage for return and decreasing remaining total until zero
-        let total = parsePennies(currency);        
-        let denomination = 0;
-        while (total !== 0 && denomination < coins.length) {
-            let coin = coins[denomination];
-            let coinpennies = parsePennies(coin);
-            // integer dividend is number of denomination coins required  
-            coinage[coin] = parseInt(total / coinpennies);
-            // remainder is the remaining total
-            total = total % coinpennies;
-            denomination++;
-        }
-
-        return coinage;
-    }
-   
-    /* Helper function to convert currency value to integer pennies value */
+      
+    /** Helper function to convert currency value to integer pennies value */
     var parsePennies = function(currency) {
         
         // initialise variable to hold pennies value for return
@@ -129,7 +112,7 @@ var Coiniser = function(formId, amountId, replyId) {
         return pennies;
     }    
     
-    /* Basic test facility taking array of input and required output values */
+    /** Basic test facility taking array of input and required output values */
     var test = function(
         inputs = [
             '',
