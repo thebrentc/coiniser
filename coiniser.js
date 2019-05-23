@@ -16,18 +16,16 @@ var Coiniser = function(formId, amountId, replyId) {
     /* Controller function linked to form submission */
     var coinise = function() {
         let amount = document.getElementById(amountId).value;
-        // validate input        
-        if (!amount 
-            || amount.match(/^£?[\d\.]+p?$/g) === null // basic currency structure            
-            || (amount.match(/\./g) !== null && amount.match(/\./g).length > 1) // and not more than one decimal point
-        ) 
-        {
-                document.getElementById(replyId).innerHTML = "Sorry, invalid value";
-                return;
+        
+        // validate input, return if invalid
+        if (!validateCurrency(amount)) {
+            document.getElementById(replyId).innerHTML = "Sorry, invalid value";
+            return;
         }
-        // else
+        
         // compute coin mix
         let coinages = coinage(amount);
+        
         // format and output
         let reply = "";        
         for (var [coin, count] of Object.entries(coinages)) {            
@@ -64,6 +62,18 @@ var Coiniser = function(formId, amountId, replyId) {
         return coinage;
     }
 
+    /* Validates format as Stirling currency for currency parameter */
+    var validateCurrency = function(currency) {
+        if (!currency 
+            || currency.match(/^£?[\d\.]+p?$/g) === null // basic currency structure            
+            || (currency.match(/\./g) !== null && currency.match(/\./g).length > 1) // and not more than one decimal point
+        ) 
+        {                
+            return false;
+        } else {
+            return true;
+        }
+    }
     
     /* Helper function to convert currency value to integer pennies value */
     var parsePennies = function(currency) {
@@ -138,4 +148,4 @@ var Coiniser = function(formId, amountId, replyId) {
 var coiniser = new Coiniser('request','amount','reply');
 
 /* optional, run tests */
-coiniser.test();
+//coiniser.test();
